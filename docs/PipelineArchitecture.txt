@@ -1,0 +1,141 @@
+# Cryptocurrency Liquidity Prediction Pipeline Documentation
+
+## Overview
+
+This document outlines the complete pipeline architecture, component descriptions, and the process flow of the Cryptocurrency Liquidity Prediction project. The project aims to predict the liquidity of cryptocurrencies based on features such as price, market cap, and volume, and deliver predictions through a Streamlit web interface.
+
+---
+
+## Architecture Diagram
+
+```
+┌────────────────────────────┐
+│    Raw CSV Dataset         │
+│ (CoinGecko 2022 Snapshot)  │
+└────────────┬───────────────┘
+             │
+             ▼
+┌────────────────────────────┐
+│  Data Preprocessing Module │
+│ - Cleaning & Transformation│
+│ - Feature Engineering      │
+└────────────┬───────────────┘
+             │
+             ▼
+┌────────────────────────────┐
+│   Exploratory Data Analysis│
+│ - Statistical Summaries    │
+│ - Visualizations           │
+└────────────┬───────────────┘
+             │
+             ▼
+┌────────────────────────────┐
+│     Model Training Module  │
+│ - Model Selection          │
+│ - Hyperparameter Tuning    │
+└────────────┬───────────────┘
+             │
+             ▼
+┌────────────────────────────┐
+│   Model & Scaler Export    │
+│ - Save as .pkl files       │
+└────────────┬───────────────┘
+             │
+             ▼
+┌────────────────────────────┐
+│    Streamlit Web App       │
+│ - Load Model & Scaler      │
+│ - User Interface           │
+│ - Predictions & Visuals    │
+└────────────┬───────────────┘
+             │
+             ▼
+┌────────────────────────────┐
+│        End Users           │
+│ - Input Features           │
+│ - View Predictions         │
+└────────────────────────────┘
+```
+
+---
+
+## Components Description
+
+### 1. Raw CSV Dataset
+
+* **Source**: CoinGecko snapshot dated 2022-03-17.
+* **Description**: Contains price, market cap, volume, and percentage changes over various time frames.
+
+### 2. Data Preprocessing Module
+
+* **Tasks**:
+
+  * Remove missing and invalid entries.
+  * Convert data types and normalize values.
+  * Engineer features like:
+
+    * `price_to_marketcap = price / market_cap`
+    * `volume_to_marketcap = volume_24h / market_cap`
+    * `volatility_score = abs(pct_change_7d)`
+
+### 3. Exploratory Data Analysis (EDA)
+
+* **Objectives**:
+
+  * Understand data distributions and relationships.
+  * Identify potential outliers and trends.
+* **Tools**:
+
+  * Pandas, Seaborn, Matplotlib.
+  * Correlation heatmaps, histograms, box plots.
+
+### 4. Model Training Module
+
+* **Steps**:
+
+  * Compare multiple models (Linear Regression, Random Forest, Gradient Boosting).
+  * Use GridSearchCV for hyperparameter tuning.
+  * Evaluate using R² score and RMSE.
+
+### 5. Model & Scaler Export
+
+* **Files Generated**:
+
+  * `best_crypto_liquidity_model.pkl`: Final trained model.
+  * `scaler.pkl`: StandardScaler used during training.
+
+### 6. Streamlit Web App
+
+* **Functionality**:
+
+  * EDA dashboard for visual insights.
+  * Prediction UI to accept user inputs and display results.
+  * Loads model and scaler for real-time inference.
+* **Integration**:
+
+  * Hosted using Streamlit.
+  * Can be tunneled via ngrok for public access.
+
+### 7. End Users
+
+* **Interaction**:
+
+  * Enter feature values like price, market cap, etc.
+  * View predicted liquidity and visual feedback.
+
+---
+
+## Tools and Technologies Used
+
+* **Python Libraries**: pandas, numpy, scikit-learn, matplotlib, seaborn
+* **Model Export**: joblib
+* **Web Interface**: Streamlit
+* **Cloud Access**: Google Drive, Colab, ngrok
+
+---
+
+## Conclusion
+
+This pipeline ensures a smooth flow from raw data to predictive insights with a user-friendly interface. It supports dynamic input, visual analysis, and real-time inference for cryptocurrency liquidity forecasting.
+
+For updates, enhancements, or deployment strategies, please refer to the associated codebase and Streamlit deployment notes.
